@@ -19,6 +19,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'xxx',
+      // 复制 xx/index.html, 自动引入打包输出的资源（js/css）
       template: path.resolve(__dirname, 'index.html'),
     })
   ],
@@ -47,24 +48,41 @@ module.exports = {
       ]
     }, {
       test: /\.less$/,
-      use: [{
-          loader: 'style-loader'
-        },
-        {
-          loader: 'css-loader'
-        },
-        {
-          loader: 'less-loader'
-        },
-        {
-          loader: 'postcss-loader'
-        } //自动补齐less文件里面的需要加浏览器前缀的
-      ]
+      use: [
+        'style-loader',
+        'css-loader',
+        'less-loader',
+        'postcss-loader'
+      ],
+      // use: [{
+      //     loader: 'style-loader'
+      //   },
+      //   {
+      //     loader: 'css-loader'
+      //   },
+      //   {
+      //     loader: 'less-loader'
+      //   },
+      //   {
+      //     loader: 'postcss-loader'
+      //   } //自动补齐less文件里面的需要加浏览器前缀的
+      // ]
+    }, {
+      test: /\.(jpg|png|gif)$/,
+      loader: 'url-loader',
+      options: {
+        /* 
+          img < 8kb, change to show base64
+          good: less http request
+          bad: size more bigger
+        */
+        limit: 8 * 1024
+      }
     }]
   },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
-  module: ""
+  mode: 'development'
 };
